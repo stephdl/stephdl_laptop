@@ -1,0 +1,170 @@
+"netrw
+    vim scp://ns7loc15//
+    -  up a dir
+    cr edit file or open dir
+    s change sort
+    v open dir in new netrw tab
+    d make directory
+    D delete directory
+    i Cycle between thin, long, wide, and tree listings
+    % create file
+    ctrl+l refresh directory
+    :E go back to netrw after file creation
+
+"Nerd commenter <leader> = ,
+    [count]<leader>cu |NERDComUncommentLine|
+    Uncomments the selected line(s).
+
+    [count]<leader>cc |NERDComComment|
+    Comment out the current line or text selected in visual mode.
+
+
+    "comment several Lines
+        ctrl+v use arrow to do the selection; 'I'  type '#' and 'esc'
+
+    "uncomment several Lines
+        ctrl+v, selection then x to uncomment
+
+
+"indent in normal mode
+    >> to indent
+    << to ! indent
+    5>> indent the 5 below line
+
+"indent in edition mode
+    ctrl t to indent
+    ctrl d to ! indent
+
+"buffer
+    Use :bn, :bp, :b #, :b name, and ctrl-6 to switch between buffers. 
+        I like ctrl-6 myself (alone it switches to the previously used buffer, 
+        or #ctrl-6 switches to buffer number 
+    Use :ls to list buffers, or a plugin like MiniBufExpl or BufExplorer
+
+
+"search and replace
+    :%s/foo/bar/g (c for confirmation) (remove the % just for the current line)
+
+" search
+    You can yank the hightlighted text first. Then : 
+    / Ctrlr+r " 
+    Which will paste what you have yanked after the /
+
+    /  then use regex (? backward)  n and N to repeat the search forward and backward.
+    shortcuts: * or # will search for the word under the cursor (forward/backward).
+
+
+"nerdtree
+    m for the menu (create, delete, move, copy)
+    ctrl ww switch between window
+    ctrl n open nerdtree
+
+
+"couper,coller,coller
+    yy  : pour copier la ligne courante
+    Y   : idem
+    y$ : pour copier du curseur à la fin de la ligne courante
+    yw : pour copier le mot sous le curseur actuel
+    dd : pour couper la ligne courante
+    d$ : pour couper du curseur à la fin de la ligne courante
+    D   : idem
+    d0 : pour couper du curseur àu debut de la ligne courante              
+    dw : pour couper le mot sous le curseur
+    x    : pour couper le caractère sous le curseur
+    X   : pour couper le caractère avant le curseur
+    p   : pour coller le contenu coupé/copié derrière le curseur / la ligne courante
+    P   : pour coller le contenu coupé/collé avant le curseur / la ligne courante
+
+    on peut mettre un chiffre devant certaines de ces "commandes" 
+    * 2yy    : copie les deux lignes "courantes" (ou plutôt la ligne courante et la suivante)
+    * 4dd   : coupe les quatre lignes "courantes"
+    * 5yw   : copie les 5 mots "courants" (ou plutôt le mot sous le curseur et les 4 suivants)
+    * 10dw : coupe les 10 mots "courants
+
+"Passer au « mode insertion »
+    i 	passe au « mode insertion » avant le curseur
+    a 	passe au « mode insertion » après le curseur
+    I 	passe au « mode insertion » en début de ligne
+    A 	passe au « mode insertion » en fin de ligne
+    o 	passe au « mode insertion » sur une nouvelle ligne au-dessous du curseur
+    O 	passe au « mode insertion » sur une nouvelle ligne au-dessus du curseur
+
+"Remplacement
+    r 	remplace le caractère sous le curseur
+    R 	passe au « mode insertion » en remplaçant les caractères sous le curseur
+
+"se deplacer
+
+    w : se déplacer de mot en mot
+    b 	déplace le curseur d'un mot vers l'arrière
+    0 et $ : se déplacer en début et fin de ligne
+    h : aller à gauche ;
+    j : aller en bas ;
+    k : aller en haut ;
+    l : aller à droite.
+
+    xG : sauter à la ligne n° X
+    G : sauter à la derniere ligne
+    gg:  sauter a la premiere ligne
+
+"pour se déplacer écran par écran :
+    <CTRL> f 	un écran vers l'avant
+    <CTRL> b 	un écran vers l'arrière
+
+"Déplacer le curseur dans le fichier
+    e 	déplace le curseur à la fin du mot (du mot suivant si déjà atteint)
+    ( 	déplace le curseur d'une phrase vers l'arrière
+    ) 	déplace le curseur d'une phrase vers l'avant
+    { 	déplace le curseur d'un paragraphe vers l'arrière
+    } 	déplace le curseur d'un paragraphe vers l'avant
+    [[ 	déplace le curseur d'une section vers l'arrière
+    ]] 	déplace le curseur d'une section vers l'arrière
+Remarque : ces motifs de déplacement peuvent être utilisés dans la syntaxe des coupers/copiers
+
+"Déplacer le curseur dans la fenêtre de vi
+    H 	déplace le curseur sur la première ligne de l'écran
+    M 	déplace le curseur au milieu de l'écran
+    L 	déplace le curseur sur la dernière ligne de l'écran
+    ( 	déplace le curseur d'une phrase vers l'arrière
+    z <ENTRÉE> 	déplace la ligne du curseur en haut de l'écran
+    z. 	déplace la ligne du curseur au milieu de l'écran
+    z- 	déplace la ligne du curseur en bas de l'écran
+
+" se deplacer ds html tag
+
+    https://stackoverflow.com/questions/6270396/navigating-html-tags-in-vim
+    You can jump between tags using visual operators, in example:
+
+    Place the cursor on the tag.
+    Enter visual mode by pressing v.
+    Select the outer tag block by pressing a+t or i+t for inner tag block.
+    Your cursor should jump forward to the matching closing html/xml tag. To jump backwards from closing tag, press o or O to jump to opposite tag.
+
+    Now you can either exit visual by pressing Esc, change it by c or copy by y.
+
+" se deplacer entre <'({"
+   use %
+
+"lancer une commande externe
+    :! : lancer une commande externe
+
+"Le découpage d'écran (split)
+    :sp : découper l'écran horizontalement
+    :sp autrefichier : affiche un ecran avec un autre fichier
+    :vsp : découper l'écran verticalement
+    :vsp  autre fichier : découper l'écran verticalement avec un autre fichier
+    Ctrl + w puis Ctrl + w : navigue de viewport en viewport. Répétez l'opération plusieurs fois pour accéder au viewport désiré.
+    Ctrl + w puis j : déplace le curseur pour aller au viewport juste en dessous. La même chose fonctionne avec les touches h, k et l
+    Ctrl + w puis q : ferme le viewport actuel.
+    Ctrl + w +v ouvre une nouvelle fenetre
+
+" Open a new file in vim
+    :sp autrefichier : affiche un ecran avec un autre fichier
+    :vsp  autre fichier : découper l'écran verticalement avec un autre fichier
+    :e autre fichier
+
+
+
+Mapping
+F2 show line
+F3  show hidden chars
