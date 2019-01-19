@@ -10,7 +10,7 @@ autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 
 " launch nerdtree
-"autocmd vimenter * NERDTree
+""autocmd vimenter * NERDTree
 
 "close NerdTree if only window
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
@@ -68,27 +68,6 @@ runtime macros/matchit.vim
 " nerdcommenter change leader
 let mapleader=","
 set timeout timeoutlen=1500
-
-
-"display not visible chars and hide on F3
-"set list
-set listchars=tab:→\ ,space:·,nbsp:␣,trail:•,eol:¶,precedes:«,extends:»
-" hide on F3 : https://stackoverflow.com/questions/12534313/vim-set-list-as-a-toggle-in-vimrc
-noremap <F3> :set list! <CR>
-inoremap <F3> <C-o>:set list! <CR>
-cnoremap <F3> <C-c>:set list! <CR>
-
-
-"netrw
-let g:netrw_banner = 1
-let g:netrw_browse_split = 3
-let g:netrw_altv = 1
-let g:netrw_winsize = 25
-
-
-"vim-vue https://vimawesome.com/plugin/vim-vue-fearless
-autocmd FileType vue syntax sync fromstart
-let g:vue_disable_pre_processors=1
 " https://github.com/posva/vim-vue#how-can-i-use-nerdcommenter-in-vue-files
 let g:ft = ''
 function! NERDCommenter_before()
@@ -109,3 +88,24 @@ function! NERDCommenter_after()
     let g:ft = ''
   endif
 endfunction
+
+
+"display not visible chars and hide on F3
+"set list
+set listchars=tab:→\ ,space:·,nbsp:␣,trail:•,eol:¶,precedes:«,extends:»
+" hide on F3 : https://stackoverflow.com/questions/12534313/vim-set-list-as-a-toggle-in-vimrc
+noremap <F3> :set list! <CR>
+inoremap <F3> <C-o>:set list! <CR>
+cnoremap <F3> <C-c>:set list! <CR>
+
+
+"netrw
+""let g:netrw_banner = 1
+""let g:netrw_browse_split = 3
+""let g:netrw_altv = 1
+""let g:netrw_winsize = 25
+
+
+"vim-vue https://vimawesome.com/plugin/vim-vue-fearless
+autocmd FileType vue syntax sync fromstart
+let g:vue_disable_pre_processors=1
