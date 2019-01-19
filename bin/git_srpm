@@ -1,0 +1,57 @@
+#!/bin/bash
+
+
+### bit of tests to see if we will not do a mess
+       if [[ -z $1 ]]; then
+       echo "################################################################################################################################"
+       echo "you must give arguments on the  package name : git_srpm package_name "
+       echo "################################################################################################################################"
+       exit
+   fi
+
+
+
+   if  [[ -d ~/git_work/$1 ]]; then
+       echo""
+       echo "###################################"
+       echo "the git directories ~/git_work/$1 is  already created."
+       echo "please remove it before to play with the script"
+       echo "think also if you have a github project called stephdl/$1"
+       echo "###################################"
+       exit
+   fi
+
+# Create needed dirs on the build box
+   rm -rf ~/rpmbuild
+   mkdir -p ~/rpmbuild/{RPMS,SRPMS,SPECS,SOURCES,BUILD}
+   mkdir -p ~/exchange
+   mkdir -p ~/git_work/$1
+
+   rpm -ivh $1*.src.rpm
+#   cd ~/rpmbuild/SPECS
+#   rpmbuild -bp --nodeps $1*.spec
+
+##we remove all patch from the spec file
+#   sed '/Patch/d' $1*.spec > $1.bis.spec
+#   sed '/%patch/d' $1.bis.spec > $1.ter.spec
+#   mv -f $1.ter.spec $1.spec
+#   rm -f $1.bis.spec
+
+
+       cp -R ~/rpmbuild/SOURCES/* ~/git_work/$1
+       cp ~/rpmbuild/SPECS/*.spec ~/git_work/$1
+       cd ~/git_work/$1
+
+      ##fill empty directories
+      find * -type d -empty -exec touch {}/.gitignore \;
+
+echo "Now you have to create the correct github remote repository and add the origin"
+echo "   Think to remove all Patches in the specfile"
+echo ""
+echo "   cd ~/git_work/$1"
+echo "   git init; git add . ; git commit -m 'first commit' ; git checkout -b branch_name"
+echo "   git remote add origin git@github.com:stephdl/$1.git"
+echo "   git push -u origin branch_name"
+
+rm -f  ~/rpmbuild/SPECS/* ~/rpmbuild/SOURCES/* ~/rpmbuild/SRPMS/* ~/rpmbuild/BUILD/*
+

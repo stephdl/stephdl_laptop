@@ -1,0 +1,33 @@
+#!/usr/bin/bash
+file='/root/repo'
+clear
+while true;
+do 
+username=''
+echo
+read -p "username: (DD to remove) " username 
+if [[ ! -f /root/repo ]];then
+    htpasswd -cmb $file firstuser plop
+fi
+
+if [[ $username  =~ 'DD' ]];then
+    read -p "Which user to remove :  " confirm
+    echo -e  "Login: $confirm"
+    read -p "(confirm with enter)" confirm2
+    htpasswd -D $file $confirm
+
+elif [[ $username  != '' ]];then
+    echo
+    grep $username $file
+    if [[ $? == '0' ]];then
+        echo
+        read -p "$username exists, remove it first (enter to continue)" confirm2
+        
+    elif [[ $? == '1' ]];then
+        PASSWORD=`date +%s | sha256sum | base64 | head -c 32`
+        echo -e  "Login: $username \nPassword : $PASSWORD"
+        read -p "(confirm with enter)" confirm2
+        htpasswd -mb $file $username $PASSWORD
+   fi
+fi
+done

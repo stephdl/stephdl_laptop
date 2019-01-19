@@ -1,0 +1,13 @@
+#!/bin/bash
+#release-tag -k FF4D07E8F96B6CA4 -T 1.3.8 nethserver-sssd.spec
+
+    if [[ -z $1 || -z $2 ]]; then
+    echo "Usage:"
+    echo "    You must give arguments on the version to tag  and the spec name : ns-release 1.7.2 nethserver-sogo.spec"
+    exit
+    fi
+
+VERSION=$1
+SPEC=$2
+
+/usr/bin/release-tag -k FF4D07E8F96B6CA4 -T $1 $2

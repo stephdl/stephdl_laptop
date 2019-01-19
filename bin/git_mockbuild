@@ -1,0 +1,167 @@
+#!/bin/bash
+##############################################################################################
+## a big thank to daniel berteaud from firewall-service who started in first to write this script
+## the purpose of this script is to create a targ.gz from the GIT folder in order to build a rpm
+## then after mock is used to make the rpm in a chroot  
+##############################################################################################
+# git_mockbuild     [ MOCKCONF ]    [ Centos_Version ]
+# parameters are optional
+ME=$(whoami)
+
+# What is the package name
+# The package name is given by the name of the main folder
+PACKAGE=$(basename $(pwd))
+
+# Informations needed from the spec file
+VERSION=$(rpm -q --qf "%{version}\n" --specfile $PACKAGE.spec | head -1)
+#echo $VERSION
+ARCH=$(rpm -q --qf "%{arch}\n" --specfile $PACKAGE.spec | head -1)
+#echo $ARCH
+RELEASE=$(rpm -q --qf "%{release}\n" --specfile $PACKAGE.spec | head -1)
+#echo $RELEASE
+# Which git branch we are talking
+BRANCH=$(git branch | grep '*' | cut -d' ' -f2)
+
+# Find the centos version
+DIST=$2
+
+if [[ -z $DIST && "$BRANCH" =~ "sme9" ]]; then
+    DIST="sme9"
+elif [[ -z $DIST && "$BRANCH" =~ "ns6" ]]; then
+    DIST="ns6"
+elif [[ -z $DIST && "$BRANCH" =~ "ns7" ]]; then
+    DIST="ns7"
+elif [[ -z $DIST && "$BRANCH" =~ "sme10" ]]; then
+    DIST="sme10"
+#
+# default version to build
+#
+elif [ -z $DIST ]; then
+    DIST="ns7"
+fi
+
+# Create a tmp folder in /tmp
+TMPDIR=$(mktemp -d)
+mkdir -p $TMPDIR/$PACKAGE-$VERSION/
+
+# Tag GIT using the version in the spec file
+#TAG=$VERSION'_'$DIST
+#git tag -f $TAG 2>&1 > /dev/null
+
+# Create needed dirs on the build box
+mkdir -p ~/rpmbuild/{RPMS,SRPMS,SPECS,SOURCES}
+mkdir -p ~/exchange
+
+#retrieve the sources
+prep-sources $PACKAGE.spec
+
+# Generate a tgz archive from the repo
+git archive --format=tar --prefix=$PACKAGE-$VERSION/ $BRANCH | tar xf - -C $TMPDIR
+
+# Generate ChangeLog
+git log --format=%H | git log --pretty --stdin --no-walk > $TMPDIR/$PACKAGE-$VERSION/CHANGELOG.git
+
+# Create the tar.gz archive 
+tar czf $TMPDIR/$PACKAGE-$VERSION.tar.gz -C $TMPDIR $PACKAGE-$VERSION
+
+# cp the spec file and tar.gz
+cp $TMPDIR/$PACKAGE-$VERSION.tar.gz ~/rpmbuild/SOURCES/$PACKAGE-$VERSION.tar.gz
+cp $PACKAGE.spec ~/rpmbuild/SPECS/
+
+##copy a list of files to SOURCES when patches or archives are not in the root folder
+ls > /tmp/$PACKAGE-$VERSION
+cp -Rf $(</tmp/$PACKAGE-$VERSION) ~/rpmbuild/SOURCES/
+
+# And build
+echo""
+echo "0.Tips"
+echo "# git_mockbuild     [ MOCKCONF ]    [ Centos_version ]"
+echo 'you can choose another build architecture : git_mockbuild sme10-64 sme9-386 sme9-64 epel-7-x86_64 epel-6-x86_64 epel-6-i386 nethserver-6-x86_64 nethserver-7-x86_64'
+echo 'you can choose which SME_Server target version you want : sme8 sme9'
+echo ""
+echo "1.Build the src.rpm"
+echo ""
+cd ~/rpmbuild/SOURCES/  
+tar -xvf ~/rpmbuild/SOURCES/$PACKAGE-$VERSION.tar.gz 2>&1 > /dev/null
+rpmbuild -bs --nodeps ~/rpmbuild/SPECS/$PACKAGE.spec
+echo ""
+echo "2.Build with Mock"
+echo ""
+echo "=============================================================="
+echo "The build RPM architecture is $ARCH" 
+echo "The target CentOS version is $DIST"
+
+if [ "$DIST" == "sme9" ]; then
+    if [ "$ARCH" == "noarch" ]; then
+        MOCKCONF="smeserver-9-i386-base"
+    elif [ "$ARCH" == "x86_64" ]; then
+        MOCKCONF="smeserver-9-x86_64-base"
+    elif [ "$ARCH" == "i386" ]; then
+        MOCKCONF="smeserver-9-i386-base"
+    fi
+
+elif [ "$DIST" == "sme10" ]; then
+        MOCKCONF="smeserver-10-x86_64-base"
+
+elif [ "$DIST" == "ns6" ]; then
+        MOCKCONF="nethserver-6-x86_64"
+
+elif [ "$DIST" == "ns7" ]; then
+        MOCKCONF="nethserver-7-x86_64"
+fi
+
+
+if ! [ -z "$1" ]; then
+    if [ $1 = "sme9-386" ]; then
+        MOCKCONF="smeserver-9-i386-base"
+    elif [ $1 = "sme9-64" ]; then
+        MOCKCONF="smeserver-9-x86_64-base"
+    elif [ $1 = "epel-7-x86_64" ]; then
+        MOCKCONF="epel-7-x86_64"
+    elif [ $1 = "epel-6-x86_64" ]; then
+        MOCKCONF="epel-6-x86_64"
+    elif [ $1 = "epel-6-i386" ]; then
+        MOCKCONF="epel-6-i386"
+    elif [ $1 = "epel-5-x86_64" ]; then
+        MOCKCONF="epel-5-x86_64"
+    elif [ $1 = "epel-5-i386" ]; then
+        MOCKCONF="epel-5-i386"
+    elif [ $1 = "sme10-64" ]; then
+        MOCKCONF="smeserver-10-x86_64-base"
+    elif [ "$1" == "nethserver-6-x86_64" ]; then
+        MOCKCONF="nethserver-6-x86_64"
+
+    elif [ "$1" == "nethserver-7-x86_64" ]; then
+        MOCKCONF="nethserver-7-x86_64"
+    fi
+fi
+
+echo "The mock chroot configuration used is  $MOCKCONF"
+echo "=============================================================="
+echo ""
+mock  --old-chroot -r $MOCKCONF --rebuild ~/rpmbuild/SRPMS/$PACKAGE-$VERSION-*.src.rpm --resultdir=/home/$ME/exchange/$PACKAGE-$VERSION
+
+# a bit of clean
+
+rm -f  ~/rpmbuild/SPECS/$PACKAGE.spec ~/rpmbuild/SOURCES/$PACKAGE-$VERSION.tar.gz ~/rpmbuild/SRPMS/$PACKAGE-$VERSION*.src.rpm
+rm -rf $TMPDIR  ~/rpmbuild/SOURCES/$PACKAGE-$VERSION
+rm -rf ~/rpmbuild/SOURCES/*
+
+# clean ~/rpmbuild/SOURCES when patches or archives are not in the root folder
+cd ~/rpmbuild/SOURCES/
+rm -rf $(</tmp/$PACKAGE-$VERSION)
+#remove the file list
+rm -rf /tmp/$PACKAGE-$VERSION
+
+# we give the path where are files
+echo ""
+echo "=================================================================================================================="
+echo "RPMS are in /home/$ME/exchange/$PACKAGE-$VERSION of your build server"
+echo ""
+ls -1 ~/exchange/$PACKAGE-$VERSION/*.rpm
+echo "=================================================================================================================="
+
+# and we sign rpm if needed, if not simply do 'enter' with keyboard
+echo ""
+echo "3.Sign your rpms"
+rpm --resign ~/exchange/$PACKAGE-$VERSION/*.rpm 2>&1 > /dev/null

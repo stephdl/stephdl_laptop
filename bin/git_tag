@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# What is the package name
+# The package name is given by the name of the main folder
+PACKAGE=$(basename $(pwd))
+
+# Informations needed from the spec file
+VERSION=$(rpm -q --qf "%{version}\n" --specfile $PACKAGE.spec | head -1)
+# Which git branch we are talking
+BRANCH=$(git branch | grep '*' | cut -d' ' -f2)
+# Find the centos version
+DIST=$1
+
+if [[ -z $DIST && "$BRANCH" =~ "sme9" ]]; then
+    DIST="sme9"
+elif [[ -z $DIST && "$BRANCH" =~ "ns6" ]]; then
+    DIST="ns6"
+elif [[ -z $DIST && "$BRANCH" =~ "ns7" ]]; then
+    DIST="ns7"
+elif [[ -z $DIST && "$BRANCH" =~ "sme10" ]]; then
+    DIST="sme10"
+elif [ -z $DIST ]; then
+    DIST="sme8"
+fi
+
+# Tag GIT using the version in the spec file
+TAG=$VERSION'_'$DIST
+git tag -f $TAG 2>&1 > /dev/null

@@ -1,0 +1,49 @@
+#!/bin/bash
+
+#
+# Copyright (C) 2016 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+dest=$1;
+shift;
+
+if [[ -z "${dest}" ]]; then
+    exec 1>&2
+
+    echo "Usage:
+    $0 <destination> file1.rpm [file2.rpm ...]
+    <destination> must be a valid sftp [user@]host[:dir[/]] format
+    ns-upload-rpms stephdl@packages.nethserver.org:nscom/7.5.1804/testing *.rpm
+    ns-upload-rpms stephdl@packages.nethserver.org:nscom/7.5.1804/nethforge *.rpm
+    "
+    exit 1
+fi
+
+( 
+#    spool=$(mktemp -u "${USER:-upload}.XXXXXX");
+    spool=$(mktemp -u "build-upload.XXXXXX");
+    echo "mkdir ${spool}";
+    echo "cd ${spool}";
+    for F in $*;
+    do
+        echo "put -p $F";
+    done;
+    echo "cd ..";
+    echo "rename ${spool} commit-${spool}" 
+) | sftp -q -p -b - ${dest} | grep --color=auto '^sftp> put'

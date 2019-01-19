@@ -1,0 +1,30 @@
+#!/bin/bash
+
+location=$(pwd)
+
+echo "############################"
+echo "      Work In Progress      "
+echo "############################"
+
+#first we update the smecontribs tree
+cd ~/work/smecontribs
+cvs -z3 -d:ext:smeserver.cvs.sourceforge.net:/cvsroot/smecontribs co -P rpms
+echo "############################"
+echo "     smecontribs uptodate   "
+echo "############################"
+echo "############################"
+echo "      Work In Progress      "
+echo "############################"
+
+cd ~/work/smeserver
+cvs -z3 -d:ext:smeserver.cvs.sourceforge.net:/cvsroot/smeserver co -P rpms
+
+echo "############################"
+echo "     smeserver uptodate     "
+echo "############################"
+
+
+cd $location
+
+
+

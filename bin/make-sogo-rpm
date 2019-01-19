@@ -1,0 +1,5 @@
+dist=ns7 mockcfg=epel-7-x86_64 make-rpms libwbxml.spec
+dist=ns7 mockcfg=epel-7-x86_64 make-rpms sope.spec
+createrepo /home/lsd/dev/git_work/SOGo-spec
+dist=ns7 mockcfg=nethserver-7-x86_64 make-rpms sogo.spec
+echo "# to clean devel rpm: rm -rf libwbxml*.rpm *devel*.rpm"

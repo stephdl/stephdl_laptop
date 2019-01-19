@@ -1,0 +1,14 @@
+echo "#"
+echo "#vim plugin update"
+echo "#"
+echo ""
+cd ~/.vim/bundle
+for i in `ls`; do
+  cd "$i"
+  echo "#"
+  echo "#update of $i"
+  echo "#"
+  echo""
+  git pull
+  cd ..
+done

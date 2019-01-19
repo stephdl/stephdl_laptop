@@ -1,0 +1,33 @@
+#!/bin/bash
+    # who i'm
+    ME=$(whoami)
+    
+    #test if the second argument is here
+    if [[ -z $2 ]]; then
+    echo "################################################"
+    echo "you must give as argument the mock configuration"
+    echo "   smeserver-9-x86_64-base smeserver-9-i386-base"
+    echo "   smeserver-8-x86_64-base smeserver-8-i386-base"
+    echo "   nethserver-6-x86_64   nethserver-7-x86_64"
+    echo "   epel-6-x86_64           epel-6-i386          "
+    echo "   epel-5-x86_64           epel-5-i386          "
+    echo " mockbuild package.src.rpm  mock_configuration  "
+    echo "################################################"
+    exit
+    fi
+                                                               
+    mock -r $2 --rebuild $1 --resultdir=/home/$ME/exchange/$2
+                                           
+    # we give the path where are files
+    echo ""
+    echo "=================================================================================================================="
+    echo "RPMS are in /home/$ME/exchange/$2 of your build server"
+    echo ""
+    ls -1 /home/$ME/exchange/$2/*.rpm
+    echo "=================================================================================================================="
+                                           
+    # and we sign rpm if needed, if not simply do 'enter' with keyboard
+    echo ""
+    echo "3.Sign your rpms"
+    rpm --resign /home/$ME/exchange/$2/*.rpm 2>&1 > /dev/null
+                                                                

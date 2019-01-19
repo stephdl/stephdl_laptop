@@ -1,0 +1,3 @@
+cvs update -dPA
+make clean
+make prep

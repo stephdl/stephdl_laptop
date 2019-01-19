@@ -1,0 +1,2 @@
+#in order to add a .gitignore file to track empty folder
+find * -type d -empty -exec touch {}/.gitignore \;

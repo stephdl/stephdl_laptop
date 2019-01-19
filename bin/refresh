@@ -1,0 +1,14 @@
+#!/bin/bash
+
+cd ~/work/smecontribs/rpms
+cvs update -dPA
+cd ~/work/smecontribs
+cvs -z3 -d:ext:smecontribs.cvs.sourceforge.net:/cvsroot/smecontribs co -P rpms
+cd ~/work/smecontribs/rpms
+
+cd ~/work/smeserver/rpms
+cvs update -dPA
+cd ~/work/smeserver
+cvs -z3 -d:ext:smecontribs.cvs.sourceforge.net:/cvsroot/smeserver co -P rpms
+cd ~/work/smeserver/rpms
+

@@ -1,0 +1,80 @@
+#test if the first argument is here
+    if [[ -z $1 ]]; then
+        echo "#################################################################################"
+        echo "you must give as argument the folder name in cvs  : contrib_migration folder_name"
+        echo "#################################################################################"
+        exit
+    fi
+
+
+
+if  [[ ! -d ~/git_work/$1 ]]; then
+
+    rm -rf $1/contribs8
+    cvs co $1/contribs8
+    cd $1/contribs8
+    make prep
+    NameGitHub=$1
+    curl -u 'stephdl:!soph,14' https://api.github.com/user/repos -d '{"name": "'"$NameGitHub"'" ,  "description": "A contrib for SME9",  "homepage": "http://wiki.contribs.org",  "private": false,  "has_issues": true,  "has_wiki": true,  "has_downloads": true}'
+    mkdir -p ~/git_work/$1
+
+    cp -R smeserver-*/* ~/git_work/$1
+    cp $1*.spec ~/git_work/$1
+    cd ~/git_work/$1
+
+      if [ -e root/usr/lib/perl5/site_perl/esmith/FormMagick/Panel/ ]; then 
+          mkdir -p root/usr/share/perl5/vendor_perl/esmith/FormMagick/Panel/
+          mv root/usr/lib/perl5/site_perl/esmith/FormMagick/Panel/* root/usr/share/perl5/vendor_perl/esmith/FormMagick/Panel/
+          rm -rf root/usr/lib/perl5
+      fi
+##we remove all patch from the spec file
+    sed '/Patch/d' $1*.spec > $1.bis.spec
+    sed '/%patch/d' $1.bis.spec > $1.ter.spec
+    mv -f $1.ter.spec $1.spec
+    rm -f $1.bis.spec
+
+
+###git work 
+
+        if [ ! -e README.md ]; then
+        touch README.md
+        echo "$1 is a contrib for SME Server, a Linux distro oriented server. see http://wiki.contribs.org" > README.md
+        fi
+
+       ##fill empty directories
+       find * -type d -empty -exec touch {}/.gitignore \;
+
+    git init
+    git add .
+    git commit -m "first commit to SME Server 9"
+    git co -b sme9
+    git remote add origin git@github.com:stephdl/$1
+    git push -u -f origin sme9
+
+##find the apache authentication
+    echo ""
+    echo ""
+    echo "we are looking if we need to modify the apache authentication"
+    testapache=$(grep -srni 'AuthType Basic' .)
+        if [[ $testapache =~ "AuthType Basic" ]]; then
+            echo "$testapache, go to work"
+            echo 'You must add before         $OUT .= "    AuthBasicProvider external\n";'
+            
+        else
+            echo "no apache authentication"
+        fi
+
+## help to write the changelog
+myDate=$(LC_ALL=C date +"%a %b %d %Y")
+    echo ""
+    echo "* $myDate stephane de Labrusse <stephdl@de-labrusse.fr>"
+    echo "- Initial release to sme9"
+
+else
+    echo""
+    echo "###################################"
+    echo "the git directory ~/git_work/$1 is already created."
+    echo "please remove it before to play with the script"
+    echo "think also if you have a github project called stephdl/$1"
+    echo "###################################"
+fi

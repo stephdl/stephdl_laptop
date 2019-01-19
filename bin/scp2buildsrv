@@ -1,0 +1,2 @@
+FILE=$1
+scp $FILE stephdl@buildsrv.koozali.org:/home/KOOZALI/stephdl/
