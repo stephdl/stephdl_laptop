@@ -1,0 +1,19 @@
+#!/bin/bash
+FILE=$1
+SERVER=$2
+if [[ -z $1 ]];then
+    echo "#
+# usage 
+#
+copy file to /root of the remote server : 
+    sc /path/2/files root@server
+or
+    sc root@server"
+    exit 0
+fi
+if [[ -z $2 ]]; then
+/usr/bin/scp *.noarch.rpm $1:/root
+else
+/usr/bin/scp $1 $2:/root
+fi
+
