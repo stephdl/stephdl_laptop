@@ -1,5 +1,11 @@
 #!/bin/bash
 
-echo 'clean *.rpm *.gz *.xz'
-
-/bin/rm *.rpm *.gz *.xz 
+if [[ $1 == '-a' ]]; then 
+    echo 'clean *.rpm *.gz *.xz'
+    /bin/rm *.rpm *.gz *.xz 
+elif [[ $1 == '-h' ]]; then 
+echo '- remove rpm & tar if `-a` else remove only *.rpm'
+else
+    echo 'clean *.rpm'
+    /bin/rm *.rpm
+fi
