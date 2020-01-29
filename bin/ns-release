@@ -1,5 +1,5 @@
 #!/bin/bash
-#release-tag -k FF4D07E8F96B6CA4 -T 1.3.8 nethserver-sssd.spec
+#releasetag -k FF4D07E8F96B6CA4 -T 1.3.8 nethserver-sssd.spec
 
     if [[ -z $1 || -z $2 ]]; then
     echo "Usage:"
@@ -10,4 +10,4 @@
 VERSION=$1
 SPEC=$2
 
-/usr/bin/release-tag -k FF4D07E8F96B6CA4 -T $1 $2
+/usr/bin/releasetag -k FF4D07E8F96B6CA4 -T $1 $2
