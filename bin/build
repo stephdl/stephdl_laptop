@@ -1,0 +1,21 @@
+#!/bin/bash
+PREP=$2
+SERVER=$1
+if [[  -z $1 ]];then
+    echo "#
+# usage 
+#
+
+build the rpm and upload to the VM:
+    build ns7loc10    # build with prep-source
+    build ns7loc10 -p # build without prep-source"
+    exit 0
+fi
+if [[ -z $2 ]]; then
+./prep-sources
+fi
+clean
+makerpms *.spec
+/usr/bin/scp *.noarch.rpm $1:/root
+
+
