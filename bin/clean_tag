@@ -1,0 +1,11 @@
+#!/bin/bash
+
+if [[ -z $1 ]]; then
+    echo "clean_tag -a remove all tags from git"
+    exit 0
+fi
+
+if [[ $1 == '-a' ]];then
+    echo "# remove all tags of git"
+    git tag | xargs git tag -d
+fi
