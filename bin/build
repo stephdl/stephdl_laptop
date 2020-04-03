@@ -12,10 +12,10 @@ build the rpm and upload to the VM:
     exit 0
 fi
 if [[ -z $2 ]]; then
-./prep-sources && clean && makerpms *.spec && /usr/bin/scp *.noarch.rpm $1:/root
+clean; ./prep-sources && makerpms *.spec && /usr/bin/scp *.noarch.rpm $1:/root
 
 else 
-    clean && makerpms *.spec && /usr/bin/scp *.noarch.rpm $1:/root
+    clean ; makerpms *.spec && /usr/bin/scp *.noarch.rpm $1:/root
 fi
 
 
