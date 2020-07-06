@@ -11,10 +11,12 @@ build the rpm and upload to the VM:
     build ns7loc10 -p # build without prep-source"
     exit 0
 fi
-if [[ -z $2 ]]; then
-clean; ./prep-sources && make-rpms *.spec && /usr/bin/scp *.noarch.rpm $1:/root
 
-else 
+if [[ -n $2 ]]; then
+    clean; make-rpms *.spec && /usr/bin/scp *.noarch.rpm $1:/root
+elif [[ -f 'prep-sources' ]];then 
+    clean; ./prep-sources && make-rpms *.spec && /usr/bin/scp *.noarch.rpm $1:/root
+else
     clean ; make-rpms *.spec && /usr/bin/scp *.noarch.rpm $1:/root
 fi
 
