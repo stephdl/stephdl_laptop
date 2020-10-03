@@ -1,0 +1,6 @@
+# https://www.youtube.com/watch?v=YrevwjeLTnQ
+#button 10 pagedown
+"xvkbd -text '\[Page_Up]'" # sends pgup
+b:10
+"xvkbd -text '\[Page_Down]'" # sends pgup
+b:11

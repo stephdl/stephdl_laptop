@@ -1,3 +1,3 @@
 #!/bin/bash
 
-/usr/bin/xbindkeys -f ~/.xbindkeysrc 
+/usr/bin/xbindkeys -f /home/stephdl/bin/xbindkeysrc 
