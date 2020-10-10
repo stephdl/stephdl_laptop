@@ -1,4 +1,10 @@
 # https://www.youtube.com/watch?v=YrevwjeLTnQ
+# https://linuxgamecast.com/2019/09/customizing-mouse-buttons-with-linux/
+# sudo apt install xbindkeys xvkbd
+#  xev | grep ', button'
+# killall -s1 xbindkeys
+# xbindkeys -f ~/.xbindkeysrc
+
 #button 10 pagedown
 "xvkbd -text '\[Page_Up]'" # sends pgup
 b:10
