@@ -4,9 +4,12 @@
 #  xev | grep ', button'
 # killall -s1 xbindkeys
 # xbindkeys -f ~/.xbindkeysrc
-
+# http://xahlee.info/linux/linux_xvkbd_tutorial.html
 #button 10 pagedown
 "xvkbd -text '\[Page_Up]'" # sends pgup
 b:10
 "xvkbd -text '\[Page_Down]'" # sends pgup
 b:11
+"xvkbd -no-jump-pointer -xsendevent -text '\Cc'" # ctrl + c
+b:12
+
