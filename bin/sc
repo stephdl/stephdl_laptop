@@ -12,7 +12,7 @@ or
     exit 0
 fi
 if [[ -z $2 ]]; then
-/usr/bin/scp *.noarch.rpm $1:/root
+/usr/bin/scp *.{noarch,x86_64}.rpm $1:/root
 else
 /usr/bin/scp $1 $2:/root
 fi
