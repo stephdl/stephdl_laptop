@@ -1,3 +1,10 @@
+"Remove the trailing line in VIM
+    In order to get rid of the trailing newline character in the last line, you need to do this in Vim:
+
+    :set noendofline binary
+    :w
+
+
 "netrw
     vim scp://ns7loc15//
     -  up a dir
