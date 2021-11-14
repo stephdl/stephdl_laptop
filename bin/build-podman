@@ -8,10 +8,15 @@ if [[  -z $1 ]];then
 #
 
 build the image podman and upload to the VM:
-    build <image-name> <user@server>"
+    build-podman <image-name> <user@server>
+list all images available to scp
+    build-podman ls"
     exit 0
 fi
-echo $2
+if [[ $1 == 'ls' ]];then
+    podman images
+    exit 0
+fi
 if [[ -z $2 ]]; then 
     echo "We have not the user@domain.com"
     exit 0
