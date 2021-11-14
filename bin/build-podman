@@ -23,8 +23,9 @@ if [[ -z $2 ]]; then
 fi
 if [[ -f 'build-image.sh' ]];then
     bash +x build-image.sh
-    podman save $1 > $1.tar
-    scp $1.tar $2:/root
+    file=${1//:/_}
+    podman save $1 > $file.tar
+    scp $file.tar $2:/root
 else
     echo "We have not found build-image.sh script"
     exit 0
