@@ -1,0 +1,27 @@
+#!/bin/bash
+IMAGE=$1
+SERVER=$2
+ # toto
+if [[  -z $1 ]];then
+    echo "#
+# usage 
+#
+
+build the image podman and upload to the VM:
+    build <image-name> <user@server>"
+    exit 0
+fi
+echo $2
+if [[ -z $2 ]]; then 
+    echo "We have not the user@domain.com"
+    exit 0
+fi
+if [[ -f 'build-image.sh' ]];then
+    bash +x build-image.sh
+    podman save $1 > $1.tar
+    scp $1.tar $2:/root
+else
+    echo "We have not found build-image.sh script"
+    exit 0
+fi
+
