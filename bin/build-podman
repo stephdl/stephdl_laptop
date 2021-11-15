@@ -7,8 +7,11 @@ if [[  -z $1 ]];then
 # usage 
 #
 
-build the image podman and upload to the VM:
-    build-podman <image-name> <user@server>
+build the image podman and upload to the /root of VM:
+    build-podman <image-name> <rootr@server>
+    build-podman mariadb:latest <root@server>
+once scp to the /root of the remote server use : 
+    podman load -i image_tag.tar
 list all images available to scp
     build-podman ls"
     exit 0
