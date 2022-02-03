@@ -24,13 +24,13 @@ if [[ -z $2 ]]; then
     echo "We have not the user@domain.com"
     exit 0
 fi
-if [[ -f 'build-image.sh' ]];then
-    bash +x build-image.sh
+if [[ -f 'build-images.sh' ]];then
+    bash +x build-images.sh
     file=${1//:/_}
     podman save $1 > $file.tar
     scp $file.tar $2:/root
 else
-    echo "We have not found build-image.sh script"
+    echo "We have not found build-images.sh script"
     exit 0
 fi
 
