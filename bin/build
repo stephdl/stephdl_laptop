@@ -14,7 +14,7 @@ build the rpm and upload to the VM:
 fi
 
 if [[ -n $2 ]]; then
-    clean; make-rpms *.spec && /usr/bin/scp *.noarch.rpm $1:/root
+    clean; make-rpms *.spec && /usr/bin/scp *.{noarch,x86_64}.rpm $1:/root
 elif [[ -f 'prep-sources' ]];then 
     clean; ./prep-sources && make-rpms *.spec && /usr/bin/scp *.{noarch,x86_64}.rpm $1:/root
 else

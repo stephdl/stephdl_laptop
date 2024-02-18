@@ -1,0 +1,37 @@
+#!/bin/bash
+IMAGE=$1
+SERVER=$2
+ # toto
+if [[  -z $1 ]];then
+    echo "#
+# usage 
+#
+
+build the image of a volume  and upload to the /root of VM:
+    build-module <image-name> <rootr@server>
+    build-module mariadb:latest <root@server>
+once scp to the /root of the remote server use : 
+    podman load -i image_tag.tar
+list all images available to scp
+    build-module ls"
+    exit 0
+fi
+if [[ $1 == 'ls' ]];then
+    podman images
+    exit 0
+fi
+if [[ -z $2 ]]; then 
+    echo "We have not the user@domain.com"
+    exit 0
+fi
+if [[ -f build-images.sh ]];then
+    bash +x build-images.sh
+#    file=${1//:/_}
+#   podman save $1 > $file.tar
+#   scp $file.tar $2:/root
+    podman save $1 |  ssh $2 podman load
+else
+    echo "We have not found build-images.sh script"
+    exit 0
+fi
+
